@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生辰八字算命</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>生辰八字算命</h1>
+            <p>输入您的基本信息，探寻命运奥秘</p>
+        </header>
+        
+        <main>
+            <form id="birthForm" class="form-section">
+                <div class="input-group">
+                    <label for="name">姓名</label>
+                    <input type="text" id="name" name="name" required placeholder="请输入您的姓名">
+                </div>
+                
+                <div class="input-group">
+                    <label for="gender">性别</label>
+                    <select id="gender" name="gender" required>
+                        <option value="">请选择</option>
+                        <option value="male">男</option>
+                        <option value="female">女</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label for="birthDate">出生日期</label>
+                    <input type="date" id="birthDate" name="birthDate" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="birthTime">出生时间</label>
+                    <input type="time" id="birthTime" name="birthTime" required>
+                </div>
+                
+                <button type="submit" class="calculate-btn">开始算命</button>
+            </form>
+            
+            <div id="result" class="result-section" style="display: none;">
+                <div class="bazi-section">
+                    <h2>您的生辰八字</h2>
+                    <div id="baziResult" class="bazi-display"></div>
+                </div>
+                
+                <div class="dayun-section">
+                    <h2>人生大运</h2>
+                    <div id="dayunResult" class="dayun-display"></div>
+                </div>
+                
+                <div class="interpretation-section">
+                    <h2>命理解读</h2>
+                    <div id="interpretationResult" class="interpretation-display"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
