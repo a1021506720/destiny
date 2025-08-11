@@ -1,0 +1,16 @@
+{
+  "name": "destiny-frontend",
+  "version": "1.0.0",
+  "description": "Chinese Fortune Telling Frontend Application",
+  "main": "index.html",
+  "scripts": {
+    "start": "python3 -m http.server 8000",
+    "build": "echo 'Static files ready for deployment'",
+    "deploy": "echo 'Deploy to static hosting service'"
+  },
+  "keywords": ["fortune-telling", "bazi", "chinese-astrology"],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {}
+}

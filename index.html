@@ -7,10 +7,27 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- 介绍浮层 -->
+    <div id="introModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>✨ 生辰八字算命系统</h2>
+            </div>
+            <div class="modal-body">
+                <div id="introContent" class="intro-content">
+                    <div class="loading">正在获取系统介绍...</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="startBtn" class="modal-btn" disabled>开始测算</button>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
         <header>
             <h1>生辰八字算命</h1>
-            <p>输入您的基本信息，探寻命运奥秘</p>
+            <p>传统命理学与现代科技的完美结合</p>
         </header>
         
         <main>
@@ -23,44 +40,81 @@
                 <div class="input-group">
                     <label for="gender">性别</label>
                     <select id="gender" name="gender" required>
-                        <option value="">请选择</option>
-                        <option value="male">男</option>
-                        <option value="female">女</option>
+                        <option value="">请选择性别</option>
+                        <option value="MALE">男</option>
+                        <option value="FEMALE">女</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label for="dateType">日期类型</label>
+                    <select id="dateType" name="dateType" required>
+                        <option value="SOLAR">公历（阳历）</option>
+                        <option value="LUNAR">农历（阴历）</option>
                     </select>
                 </div>
                 
                 <div class="input-group">
                     <label for="birthDate">出生日期</label>
                     <input type="date" id="birthDate" name="birthDate" required>
+                    <small class="date-hint">请选择您的出生日期</small>
                 </div>
                 
                 <div class="input-group">
-                    <label for="birthTime">出生时间</label>
-                    <input type="time" id="birthTime" name="birthTime" required>
+                    <label for="birthHour">出生时辰</label>
+                    <select id="birthHour" name="birthHour" required>
+                        <option value="">请选择时辰</option>
+                        <option value="0">子时 (23:00-01:00)</option>
+                        <option value="1">丑时 (01:00-03:00)</option>
+                        <option value="2">寅时 (03:00-05:00)</option>
+                        <option value="3">卯时 (05:00-07:00)</option>
+                        <option value="4">辰时 (07:00-09:00)</option>
+                        <option value="5">巳时 (09:00-11:00)</option>
+                        <option value="6">午时 (11:00-13:00)</option>
+                        <option value="7">未时 (13:00-15:00)</option>
+                        <option value="8">申时 (15:00-17:00)</option>
+                        <option value="9">酉时 (17:00-19:00)</option>
+                        <option value="10">戌时 (19:00-21:00)</option>
+                        <option value="11">亥时 (21:00-23:00)</option>
+                    </select>
                 </div>
                 
-                <button type="submit" class="calculate-btn">开始算命</button>
+                <div class="input-group">
+                    <label for="reportType">分析类型</label>
+                    <div class="report-type-options">
+                        <label class="report-option">
+                            <input type="checkbox" name="reportType" value="bazi" checked>
+                            <span class="option-content">
+                                <strong>🔮 生辰八字</strong>
+                                <small>基础八字排盘和五行分析</small>
+                            </span>
+                        </label>
+                        
+                        <label class="report-option">
+                            <input type="checkbox" name="reportType" value="dayun">
+                            <span class="option-content">
+                                <strong>📊 人生大运</strong>
+                                <small>十年大运走势分析</small>
+                            </span>
+                        </label>
+                        
+                        <label class="report-option">
+                            <input type="checkbox" name="reportType" value="ziping">
+                            <span class="option-content">
+                                <strong>⚡ 子平术分析</strong>
+                                <small>五行十神十二宫详细分析</small>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                
+                <button type="submit" class="calculate-btn">生成专属命理报告</button>
             </form>
-            
-            <div id="result" class="result-section" style="display: none;">
-                <div class="bazi-section">
-                    <h2>您的生辰八字</h2>
-                    <div id="baziResult" class="bazi-display"></div>
-                </div>
-                
-                <div class="dayun-section">
-                    <h2>人生大运</h2>
-                    <div id="dayunResult" class="dayun-display"></div>
-                </div>
-                
-                <div class="interpretation-section">
-                    <h2>命理解读</h2>
-                    <div id="interpretationResult" class="interpretation-display"></div>
-                </div>
-            </div>
         </main>
     </div>
     
+    <script src="config.js"></script>
+    <script src="api-services.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
