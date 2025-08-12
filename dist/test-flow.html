@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API 数据流测试</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin-bottom: 30px; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; }
+        button { padding: 10px 15px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>🧪 API 数据流测试</h1>
+    
+    <div class="test-section">
+        <h2>1. 测试八字计算 API</h2>
+        <button onclick="testBaziAPI()">测试八字API</button>
+        <div id="baziResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>2. 测试大运计算 API</h2>
+        <button onclick="testDayunAPI()">测试大运API</button>
+        <div id="dayunResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>3. 测试子平术分析 API</h2>
+        <button onclick="testZipingAPI()">测试子平术API</button>
+        <div id="zipingResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>4. 模拟完整流程</h2>
+        <button onclick="testCompleteFlow()">测试完整流程</button>
+        <div id="completeResult"></div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="api-services.js"></script>
+    <script>
+        const apiService = new ApiService();
+        const testData = {
+            date: "1990-01-01",
+            time: "12:00",
+            dateType: "SOLAR",
+            gender: "MALE"
+        };
+
+        async function testBaziAPI() {
+            const resultDiv = document.getElementById('baziResult');
+            resultDiv.innerHTML = '<p>🔄 测试中...</p>';
+            
+            try {
+                const result = await apiService.calculateBazi(testData.date, testData.time, testData.dateType);
+                resultDiv.innerHTML = `
+                    <div class="success">
+                        <h4>✅ 八字API测试成功</h4>
+                        <pre>${JSON.stringify(result, null, 2)}</pre>
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h4>❌ 八字API测试失败</h4>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function testDayunAPI() {
+            const resultDiv = document.getElementById('dayunResult');
+            resultDiv.innerHTML = '<p>🔄 测试中...</p>';
+            
+            try {
+                const result = await apiService.calculateDayun(testData.date, testData.time, testData.dateType, testData.gender);
+                resultDiv.innerHTML = `
+                    <div class="success">
+                        <h4>✅ 大运API测试成功</h4>
+                        <p><strong>返回数据结构:</strong></p>
+                        <ul>
+                            <li>dayunSteps: ${result.dayunSteps ? result.dayunSteps.length : 0} 个</li>
+                            <li>startAge: ${result.startAge}</li>
+                            <li>gender: ${result.gender}</li>
+                        </ul>
+                        <pre>${JSON.stringify(result, null, 2)}</pre>
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h4>❌ 大运API测试失败</h4>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function testZipingAPI() {
+            const resultDiv = document.getElementById('zipingResult');
+            resultDiv.innerHTML = '<p>🔄 测试中...</p>';
+            
+            try {
+                const result = await apiService.calculateZiping(testData.date, testData.time, testData.dateType);
+                resultDiv.innerHTML = `
+                    <div class="success">
+                        <h4>✅ 子平术API测试成功</h4>
+                        <p><strong>返回数据结构:</strong></p>
+                        <ul>
+                            <li>wuxingStats: ${result.wuxingStats ? '✅' : '❌'}</li>
+                            <li>shishenStats: ${result.shishenStats ? '✅' : '❌'}</li>
+                            <li>shierGongStats: ${result.shierGongStats ? '✅' : '❌'}</li>
+                            <li>wangShuaiAnalysis: ${result.wangShuaiAnalysis ? '✅' : '❌'}</li>
+                        </ul>
+                        <pre>${JSON.stringify(result, null, 2)}</pre>
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h4>❌ 子平术API测试失败</h4>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function testCompleteFlow() {
+            const resultDiv = document.getElementById('completeResult');
+            resultDiv.innerHTML = '<p>🔄 测试完整流程...</p>';
+            
+            try {
+                // 模拟用户数据
+                const userData = {
+                    name: "测试用户",
+                    gender: "MALE",
+                    dateType: "SOLAR",
+                    birthDate: "1990-01-01",
+                    birthTime: "12:00",
+                    reportTypes: ["bazi", "dayun", "ziping"]
+                };
+                
+                // 模拟完整的报告生成流程
+                const reportData = {};
+                let successCount = 0;
+                let totalTests = 3;
+                
+                // 1. 八字计算
+                try {
+                    reportData.bazi = await apiService.calculateBazi(userData.birthDate, userData.birthTime, userData.dateType);
+                    successCount++;
+                } catch (error) {
+                    console.error('八字计算失败:', error);
+                }
+                
+                // 2. 大运计算
+                try {
+                    reportData.dayun = await apiService.calculateDayun(userData.birthDate, userData.birthTime, userData.dateType, userData.gender);
+                    successCount++;
+                } catch (error) {
+                    console.error('大运计算失败:', error);
+                }
+                
+                // 3. 子平术分析
+                try {
+                    reportData.ziping = await apiService.calculateZiping(userData.birthDate, userData.birthTime, userData.dateType);
+                    successCount++;
+                } catch (error) {
+                    console.error('子平术分析失败:', error);
+                }
+                
+                // 4. 生成解读
+                if (reportData.bazi) {
+                    const interpretationGenerator = new InterpretationGenerator();
+                    reportData.interpretation = interpretationGenerator.generateInterpretation(
+                        reportData.bazi,
+                        userData.gender,
+                        userData.name
+                    );
+                    successCount++;
+                    totalTests++;
+                }
+                
+                resultDiv.innerHTML = `
+                    <div class="${successCount === totalTests ? 'success' : 'error'}">
+                        <h4>${successCount === totalTests ? '✅' : '⚠️'} 完整流程测试结果</h4>
+                        <p><strong>成功率:</strong> ${successCount}/${totalTests} (${Math.round(successCount/totalTests*100)}%)</p>
+                        
+                        <h5>数据验证:</h5>
+                        <ul>
+                            <li>八字数据: ${reportData.bazi ? '✅ 包含四柱信息' : '❌ 缺失'}</li>
+                            <li>大运数据: ${reportData.dayun && reportData.dayun.dayunSteps ? `✅ ${reportData.dayun.dayunSteps.length}个大运期` : '❌ 缺失'}</li>
+                            <li>子平术数据: ${reportData.ziping && reportData.ziping.wuxingStats ? '✅ 完整分析' : '❌ 缺失'}</li>
+                            <li>命理解读: ${reportData.interpretation ? `✅ ${reportData.interpretation.length}个字符` : '❌ 缺失'}</li>
+                        </ul>
+                        
+                        <details>
+                            <summary>查看完整数据结构</summary>
+                            <pre>${JSON.stringify(reportData, null, 2)}</pre>
+                        </details>
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h4>❌ 完整流程测试失败</h4>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // 自动显示环境信息
+        showEnvironmentInfo();
+    </script>
+</body>
+</html>
