@@ -462,3 +462,169 @@
         padding: 20px;
     }
 }
+
+/* 完整报告样式 */
+.complete-section {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.complete-section h2 {
+    color: #667eea;
+    margin: 0 0 20px 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #eef2ff;
+}
+
+.complete-report-content {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.complete-section .complete-section {
+    background: #f8f9ff;
+    border-radius: 12px;
+    padding: 20px;
+    border-left: 4px solid #667eea;
+    margin-bottom: 0;
+    box-shadow: none;
+}
+
+.complete-section .complete-section h3 {
+    color: #667eea;
+    margin: 0 0 15px 0;
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.complete-section .complete-section p {
+    line-height: 1.8;
+    color: #444;
+    margin: 10px 0;
+}
+
+.complete-section .complete-section strong {
+    color: #333;
+    font-weight: 600;
+}
+
+.complete-basic-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.complete-basic-info p {
+    background: white;
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin: 0;
+    border: 1px solid #e0e6ff;
+}
+
+.complete-personality,
+.complete-career,
+.complete-wealth,
+.complete-relationship,
+.complete-health,
+.complete-advice {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #e0e6ff;
+}
+
+.complete-lucky {
+    background: linear-gradient(135deg, #fff 0%, #f0f2ff 100%);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #e0e6ff;
+}
+
+.complete-lucky p {
+    margin: 8px 0;
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.8);
+    border-radius: 6px;
+    border-left: 3px solid #667eea;
+}
+
+.complete-summary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-left: 4px solid #fff;
+}
+
+.complete-summary h3 {
+    color: white;
+}
+
+.complete-overall {
+    background: rgba(255,255,255,0.15);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.3);
+}
+
+.complete-overall p {
+    color: white;
+    margin: 0;
+    font-size: 1.05rem;
+    line-height: 1.8;
+}
+
+.complete-shensha {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 10px;
+}
+
+.shensha-item {
+    background: white;
+    padding: 12px;
+    border-radius: 6px;
+    border-left: 3px solid #667eea;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.complete-advice ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.complete-advice li {
+    background: white;
+    padding: 10px 15px;
+    margin: 8px 0;
+    border-radius: 6px;
+    border-left: 3px solid #667eea;
+    position: relative;
+}
+
+.complete-advice li::before {
+    content: "💡";
+    margin-right: 8px;
+}
+
+/* 完整报告的响应式设计 */
+@media (max-width: 768px) {
+    .complete-basic-info {
+        grid-template-columns: 1fr;
+    }
+    
+    .complete-section .complete-section {
+        padding: 15px;
+    }
+    
+    .complete-section .complete-section h3 {
+        font-size: 1.1rem;
+    }
+}

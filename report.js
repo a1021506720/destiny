@@ -119,6 +119,18 @@ class ReportApp {
                         console.log('子平术API返回数据:', zipingResponse);
                         this.reportData.ziping = zipingResponse;
                         break;
+                        
+                    case 'complete':
+                        const completeResponse = await this.apiService.calculateComplete(
+                            this.userData.birthDate,
+                            this.userData.birthTime,
+                            this.userData.dateType,
+                            this.userData.gender,
+                            this.userData.name
+                        );
+                        console.log('完整报告API返回数据:', completeResponse);
+                        this.reportData.complete = completeResponse;
+                        break;
                 }
                 
                 // 更新进度条
@@ -172,7 +184,8 @@ class ReportApp {
         const stepNames = {
             'bazi': '计算生辰八字',
             'dayun': '分析人生大运',
-            'ziping': '进行子平术分析'
+            'ziping': '进行子平术分析',
+            'complete': '生成完整命理报告'
         };
         return stepNames[reportType] || '处理数据';
     }
@@ -222,6 +235,12 @@ class ReportApp {
         document.getElementById('zipingSection').style.display = 'none';
         document.getElementById('interpretationSection').style.display = 'none';
         
+        // 隐藏完整报告部分
+        const completeSection = document.getElementById('completeSection');
+        if (completeSection) {
+            completeSection.style.display = 'none';
+        }
+        
         // 根据选择显示相应部分
         if (reportTypes.includes('bazi') && this.reportData.bazi) {
             document.getElementById('baziSection').style.display = 'block';
@@ -266,6 +285,23 @@ class ReportApp {
                 console.log('✅ 显示了子平术部分');
             } else {
                 console.log('❌ 子平术数据为空');
+            }
+        }
+        
+        if (reportTypes.includes('complete')) {
+            console.log('用户选择了完整报告，检查数据:', this.reportData.complete);
+            
+            if (this.reportData.complete) {
+                const completeSection = document.getElementById('completeSection');
+                if (completeSection) {
+                    completeSection.style.display = 'block';
+                    this.displayCompleteReport();
+                    console.log('✅ 显示了完整报告部分');
+                } else {
+                    console.log('❌ 完整报告部分DOM元素不存在');
+                }
+            } else {
+                console.log('❌ 完整报告数据为空');
             }
         }
         
@@ -538,6 +574,141 @@ class ReportApp {
         `;
     }
 
+    displayCompleteReport() {
+        if (!this.reportData.complete) return;
+        
+        const completeData = this.reportData.complete;
+        const completeDisplay = document.getElementById('completeDisplay');
+        
+        if (!completeDisplay) {
+            console.error('完整报告显示元素不存在');
+            return;
+        }
+        
+        let completeHtml = '<div class="complete-report-content">';
+        
+        // 基本信息部分
+        if (completeData.baziInfo) {
+            completeHtml += `
+                <div class="complete-section">
+                    <h3>📋 基本信息</h3>
+                    <div class="complete-basic-info">
+                        ${completeData.baziInfo.solarDate ? `<p><strong>阳历：</strong>${completeData.baziInfo.solarDate}</p>` : ''}
+                        ${completeData.baziInfo.lunarDate ? `<p><strong>农历：</strong>${completeData.baziInfo.lunarDate}</p>` : ''}
+                        ${completeData.baziInfo.bazi ? `<p><strong>八字：</strong>${completeData.baziInfo.bazi}</p>` : ''}
+                        ${completeData.baziInfo.description ? `<p><strong>说明：</strong>${completeData.baziInfo.description}</p>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+        
+        // 性格分析部分
+        if (completeData.comprehensiveAnalysis && completeData.comprehensiveAnalysis.personalityAnalysis) {
+            completeHtml += `
+                <div class="complete-section">
+                    <h3>🌟 性格特征分析</h3>
+                    <div class="complete-personality">
+                        <p>${completeData.comprehensiveAnalysis.personalityAnalysis}</p>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // 事业运势部分
+        if (completeData.comprehensiveAnalysis && completeData.comprehensiveAnalysis.careerAnalysis) {
+            completeHtml += `
+                <div class="complete-section">
+                    <h3>💼 事业运势</h3>
+                    <div class="complete-career">
+                        <p>${completeData.comprehensiveAnalysis.careerAnalysis}</p>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // 财运分析部分
+        if (completeData.comprehensiveAnalysis && completeData.comprehensiveAnalysis.wealthAnalysis) {
+            completeHtml += `
+                <div class="complete-section">
+                    <h3>💰 财运分析</h3>
+                    <div class="complete-wealth">
+                        <p>${completeData.comprehensiveAnalysis.wealthAnalysis}</p>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // 感情婚姻部分
+        if (completeData.comprehensiveAnalysis && completeData.comprehensiveAnalysis.relationshipAnalysis) {
+            completeHtml += `
+                <div class="complete-section">
+                    <h3>💕 感情婚姻</h3>
+                    <div class="complete-relationship">
+                        <p>${completeData.comprehensiveAnalysis.relationshipAnalysis}</p>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // 健康运势部分
+        if (completeData.comprehensiveAnalysis && completeData.comprehensiveAnalysis.healthAnalysis) {
+            completeHtml += `
+                <div class="complete-section">
+                    <h3>🏃 健康运势</h3>
+                    <div class="complete-health">
+                        <p>${completeData.comprehensiveAnalysis.healthAnalysis}</p>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // 人生建议部分
+        if (completeData.comprehensiveAnalysis && completeData.comprehensiveAnalysis.suggestions) {
+            completeHtml += `
+                <div class="complete-section">
+                    <h3>💡 人生建议</h3>
+                    <div class="complete-advice">
+                        <ul>
+                            ${completeData.comprehensiveAnalysis.suggestions.map(suggestion => `<li>${suggestion}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // 神煞信息部分
+        if (completeData.shenshaResult && completeData.shenshaResult.shenshaList) {
+            completeHtml += `
+                <div class="complete-section">
+                    <h3>🔮 神煞解析</h3>
+                    <div class="complete-shensha">
+                        ${completeData.shenshaResult.shenshaList.map(shensha => `
+                            <div class="shensha-item">
+                                <strong>${shensha.name}</strong> (${shensha.position})：${shensha.description}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+        
+        // 综合评价部分
+        if (completeData.comprehensiveAnalysis && completeData.comprehensiveAnalysis.overallSummary) {
+            completeHtml += `
+                <div class="complete-section complete-summary">
+                    <h3>⭐ 综合评价</h3>
+                    <div class="complete-overall">
+                        <p>${completeData.comprehensiveAnalysis.overallSummary}</p>
+                    </div>
+                </div>
+            `;
+        }
+        
+        completeHtml += '</div>';
+        
+        completeDisplay.innerHTML = completeHtml;
+    }
+
     displayInterpretation() {
         const interpretationDisplay = document.getElementById('interpretationDisplay');
         interpretationDisplay.textContent = this.reportData.interpretation;
@@ -643,6 +814,18 @@ class ReportApp {
                 break;
         }
     }
+}
+
+// 显示环境信息函数
+function showEnvironmentInfo() {
+    const config = getCurrentConfig();
+    console.log('🌍 环境信息:', {
+        当前环境: CONFIG.currentEnv,
+        API地址: config.apiBaseURL,
+        CORS启用: config.corsEnabled,
+        页面协议: window.location.protocol,
+        主机名: window.location.hostname
+    });
 }
 
 // 初始化报告应用

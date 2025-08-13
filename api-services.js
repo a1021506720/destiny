@@ -105,6 +105,37 @@ class ApiService {
             throw error;
         }
     }
+
+    async calculateComplete(date, time, dateType = 'SOLAR', gender, name, leapMonth = false) {
+        const requestData = {
+            date: date,
+            time: time,
+            dateType: dateType,
+            gender: gender,
+            name: name,
+            leapMonth: leapMonth
+        };
+
+        try {
+            const response = await fetch(`${this.baseURL}/api/analysis/complete`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestData)
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || `HTTP错误: ${response.status}`);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('完整命理报告API调用失败:', error);
+            throw error;
+        }
+    }
 }
 
 // 大运计算类（用于补充后端可能没有的大运功能）

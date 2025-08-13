@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>完整报告API测试</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin-bottom: 30px; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; }
+        button { padding: 10px 15px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer; }
+        input, select { padding: 8px; margin: 5px; border: 1px solid #ccc; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <h1>🧪 完整报告API测试</h1>
+    
+    <div class="test-section">
+        <h2>1. 环境信息</h2>
+        <p>当前环境: <span id="currentEnv"></span></p>
+        <p>当前后端地址: <span id="apiUrl"></span></p>
+    </div>
+
+    <div class="test-section">
+        <h2>2. 测试完整报告API</h2>
+        <div>
+            <label>姓名: <input type="text" id="testName" value="张三"></label><br>
+            <label>性别: 
+                <select id="testGender">
+                    <option value="MALE">男</option>
+                    <option value="FEMALE">女</option>
+                </select>
+            </label><br>
+            <label>日期: <input type="date" id="testDate" value="1990-05-15"></label><br>
+            <label>时间: <input type="time" id="testTime" value="14:30"></label><br>
+            <label>日期类型: 
+                <select id="testDateType">
+                    <option value="SOLAR">阳历</option>
+                    <option value="LUNAR">农历</option>
+                </select>
+            </label><br>
+        </div>
+        <button onclick="testCompleteAPI()">测试完整报告API</button>
+        <div id="completeResult"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. 模拟前端流程</h2>
+        <button onclick="simulateFrontendFlow()">模拟前端完整流程</button>
+        <div id="frontendResult"></div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="https-fix.js"></script>
+    <script src="api-services.js"></script>
+    <script>
+        // 页面加载时显示环境信息
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('currentEnv').textContent = CONFIG.currentEnv;
+            document.getElementById('apiUrl').textContent = getCurrentConfig().apiBaseURL;
+        });
+
+        async function testCompleteAPI() {
+            const resultDiv = document.getElementById('completeResult');
+            resultDiv.innerHTML = '🔄 测试中...';
+            
+            const name = document.getElementById('testName').value;
+            const gender = document.getElementById('testGender').value;
+            const date = document.getElementById('testDate').value;
+            const time = document.getElementById('testTime').value;
+            const dateType = document.getElementById('testDateType').value;
+            
+            try {
+                const apiService = new ApiService();
+                const result = await apiService.calculateComplete(date, time, dateType, gender, name);
+                resultDiv.innerHTML = `
+                    <div class="success">
+                        <h4>✅ 完整报告API测试成功</h4>
+                        <p><strong>返回数据结构:</strong></p>
+                        <ul>
+                            <li>基本信息: ${result.basicInfo ? '✅' : '❌'}</li>
+                            <li>性格分析: ${result.personalityAnalysis ? '✅' : '❌'}</li>
+                            <li>事业运势: ${result.careerFortune ? '✅' : '❌'}</li>
+                            <li>财运分析: ${result.wealthFortune ? '✅' : '❌'}</li>
+                            <li>感情婚姻: ${result.relationshipFortune ? '✅' : '❌'}</li>
+                            <li>健康运势: ${result.healthFortune ? '✅' : '❌'}</li>
+                            <li>人生建议: ${result.lifeAdvice ? '✅' : '❌'}</li>
+                            <li>开运指南: ${result.luckyGuide ? '✅' : '❌'}</li>
+                            <li>综合评价: ${result.overallSummary ? '✅' : '❌'}</li>
+                        </ul>
+                        <details>
+                            <summary>查看完整数据</summary>
+                            <pre>${JSON.stringify(result, null, 2)}</pre>
+                        </details>
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h4>❌ 完整报告API测试失败</h4>
+                        <p>错误信息: ${error.message}</p>
+                        <p>这可能是因为后端还没有实现 /complete 接口</p>
+                        <p>建议检查后端代码并实现相应的接口</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function simulateFrontendFlow() {
+            const resultDiv = document.getElementById('frontendResult');
+            resultDiv.innerHTML = '🔄 模拟前端流程...';
+            
+            try {
+                // 模拟用户数据
+                const userData = {
+                    name: "测试用户",
+                    gender: "MALE",
+                    dateType: "SOLAR",
+                    birthDate: "1990-05-15",
+                    birthTime: "14:30",
+                    reportTypes: ["complete"]
+                };
+                
+                // 将数据存储到sessionStorage（模拟用户提交表单）
+                sessionStorage.setItem('destinyUserData', JSON.stringify(userData));
+                
+                resultDiv.innerHTML = `
+                    <div class="success">
+                        <h4>✅ 前端流程模拟成功</h4>
+                        <p>已将测试数据存储到 sessionStorage</p>
+                        <p><strong>存储的数据:</strong></p>
+                        <pre>${JSON.stringify(userData, null, 2)}</pre>
+                        <p><a href="report.html" target="_blank">点击打开报告页面测试</a></p>
+                        <p>注意：如果后端 /complete 接口未实现，报告页面会显示错误</p>
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h4>❌ 前端流程模拟失败</h4>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

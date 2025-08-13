@@ -5,29 +5,31 @@ function isHttpsEnvironment() {
     return window.location.protocol === 'https:';
 }
 
-// 获取适合当前环境的API基础URL
-function getApiBaseURL() {
-    const config = getCurrentConfig();
-    
-    // 如果是HTTPS环境但API是HTTP，使用代理
-    if (isHttpsEnvironment() && config.apiBaseURL.startsWith('http:')) {
-        console.warn('检测到HTTPS混合内容问题，使用代理服务');
-        // 方案1：使用allorigins代理
-        return `https://api.allorigins.win/raw?url=${encodeURIComponent(config.apiBaseURL)}`;
-        
-        // 方案2：使用codetabs代理（备用）
-        // return `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(config.apiBaseURL)}`;
-    }
-    
-    return config.apiBaseURL;
+// 检测是否是测试页面
+function isTestPage() {
+    return window.location.pathname.includes('test-');
 }
 
 // 修改原有的getCurrentConfig函数
 const originalGetCurrentConfig = getCurrentConfig;
 getCurrentConfig = function() {
     const config = originalGetCurrentConfig();
-    // 动态调整API地址
-    config.apiBaseURL = getApiBaseURL();
+    
+    // 如果是测试页面，不使用代理
+    if (isTestPage()) {
+        return config;
+    }
+    
+    // 如果是HTTPS环境但API是HTTP，使用代理
+    if (isHttpsEnvironment() && config.apiBaseURL.startsWith('http:')) {
+        console.warn('检测到HTTPS混合内容问题，使用代理服务');
+        // 方案1：使用allorigins代理
+        config.apiBaseURL = `https://api.allorigins.win/raw?url=${encodeURIComponent(config.apiBaseURL)}`;
+        
+        // 方案2：使用codetabs代理（备用）
+        // config.apiBaseURL = `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(config.apiBaseURL)}`;
+    }
+    
     return config;
 };
 

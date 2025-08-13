@@ -27,7 +27,13 @@ class DestinyApp {
 
     async showIntroModal() {
         try {
-            const apiInfo = await this.apiService.getApiInfo();
+            // 设置5秒超时
+            const apiInfo = await Promise.race([
+                this.apiService.getApiInfo(),
+                new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('请求超时')), 5000)
+                )
+            ]);
             this.displayIntroContent(apiInfo);
         } catch (error) {
             console.error('获取API信息失败:', error);
@@ -173,6 +179,18 @@ class DestinyApp {
             newErrorDiv.remove();
         }, 5000);
     }
+}
+
+// 显示环境信息函数
+function showEnvironmentInfo() {
+    const config = getCurrentConfig();
+    console.log('🌍 环境信息:', {
+        当前环境: CONFIG.currentEnv,
+        API地址: config.apiBaseURL,
+        CORS启用: config.corsEnabled,
+        页面协议: window.location.protocol,
+        主机名: window.location.hostname
+    });
 }
 
 // 初始化应用（仅在主页面）
